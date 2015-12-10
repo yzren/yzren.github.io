@@ -3,87 +3,89 @@
 <head>
   <meta charset="UTF-8">
   <title>Document</title>
-  <link rel="stylesheet" href="css/style.css"/>
   <link rel="stylesheet" href="css/bootstrop.css">
-  <script src="angular.js"></script>
+  <script src="js/angular.js"></script>
+  <script src="js/moment.js"></script>
+  
 </head>
 <body ng-controller="myCon">
- <div style="width:500px; margin:50px auto;">
-    <form class="form-horizontal showcase-form" name="basic" id="basic"  novalidate="">
-    <div class="form-group">
-      <label class="col-sm-2">邮箱</label>
-      <div class="col-sm-10">
-        <input type="email" name="user_email" ng-model="vm.user.email" required="" class="form-control" placeholder="邮箱">
+<table class="table table-bordered table-hover">
+  <thead>
+  <tr>
+    <th rowspan="2"><input type="checkbox" ng-model="vm.allChecked" ng-change="vm.checkAll(vm.allChecked)"/></th>
+    <th rowspan="2">姓名</th>
+    <th colspan="3">详情</th>
+    <th rowspan="2">操作</th>
+  </tr>
+  <tr>
+    <th>粉丝数</th>
+    <th>生日</th>
+    <th>收入</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr ng-repeat="item in vm.items">
+    <td><input type="checkbox" ng-model="item.$checked"/></td>
+    <td>{{item.name}}</td>
+    <td class="text-right">{{item.followers|number}}</td>
+    <td>{{item.birthday|date}} ({{vm.age(item.birthday)}}岁)</td>
+    <td class="text-right">{{item.income|currency}}</td>
+    <td class="dropdown">
+        <span class="btn btn-primary btn-xs dropdown-toggle" data-toggle="toggle" title="点此查看详情"><i
+            class="glyphicon glyphicon-comment"></i></span>
+
+      <div class="dropdown-menu panel-body">
+
+        <h3>{{item.id}} - {{item.name}}</h3>
+        粉丝：{{item.followers|number}}<br/>
+        生日：{{item.birthday|date}}<br/>
+        年龄：{{vm.age(item.birthday)}}岁<br/>
+        收入：{{item.income|currency}}
+
       </div>
-    </div>
-    <div class="form-group">
-      <label class="col-sm-2">用户名</label>
-      <div class="col-sm-10">
-        <input type="text" name="user_name" ng-model="vm.user.name" ng-pattern="/^[A-Za-z]{1}[0-9A-Za-z_]{2,29}$/" required="" class="form-control" placeholder="用户名">
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="col-sm-2">密码</label>
-      <div class="col-sm-10">
-        <input type="password" name="user_password" ng-model="vm.user.password" required="" ng-maxlength="20" ng-minlength="6" class="form-control" placeholder="密码">
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="col-sm-2"></label>
-      <div class="alert alert-danger" ng-show="basic.$invalid && (vm.type_show==3 || basic.$dirty ) && vm.type_error">
-      <ul>
-          <li ng-show="basic.user_email.$invalid && (vm.type_show==3 || basic.user_email.$dirty ) && basic.user_email.$error.required">邮箱不能为空</li>
-          <li ng-show="basic.user_email.$invalid && (vm.type_show==3 || basic.user_email.$dirty ) && basic.user_email.$error.email">邮箱格式不正确</li>
-          <li ng-show="basic.user_name.$invalid && (vm.type_show==3 || basic.user_name.$dirty ) && basic.user_name.$error.required">用户名不能为空</li>
-          <li ng-show="basic.user_name.$invalid && (vm.type_show==3 || basic.user_name.$dirty ) && basic.user_name.$error.pattern">用户名格式不正确</li>
-          <li ng-show="basic.user_password.$invalid && (vm.type_show==3 || basic.user_password.$dirty ) && basic.user_password.$error.required">密码不能为空</li>
-          <li ng-show="basic.user_password.$invalid && (vm.type_show==3 || basic.user_password.$dirty ) && basic.user_password.$error.maxlength">密码不能大于20</li>
-          <li ng-show="basic.user_password.$invalid && (vm.type_show==3 || basic.user_password.$dirty ) && basic.user_password.$error.minlength">密码不能小于6</li>
-        </ul>
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="col-sm-2"></label>
-      <div class="col-sm-10">
-        <input type="submit" ng-click="vm.submit(basic)" ng-disabled="vm.type_show!=3 && basic.$invalid " class="btn btn-success" value="提交">
-      </div>
-    </div>
-    <hr>
-    <label for="">
-      <select class="form-control" ng-model="vm.type_show" ng-change="vm.change_type(basic)">
-        <option value="1">只有输入框样式变化</option>
-        <option value="2">显示错误提示</option>
-        <option value="3">点击提交才显示错误提示</option>
-      </select>
-    </label>
-  </form>
- </div>
+    </td>
+  </tr>
+  </tbody>
+</table>
+<!-- <div> 选中的项：<br/>
+  <label class="label label-success" ng-repeat-start="item in vm.selection()">{{item.name}}</label><span
+      ng-if="!$last && $index % 5 !== 4">,</span><br ng-repeat-end ng-if="$index % 5 === 4"/>
+</div> -->
 </body>
 </html>
 <script type="text/javascript">
-  angular.module("myApp",[]).controller("myCon",function($scope){
-    var vm= $scope.vm={
-      type_error:false,
-      type_show:1,
-      user:{}
-    };
-    vm.submit=function(basic){
-      vm.type_error=true;
-      basic.$setDirty();
-      if(basic.$valid) {
-        alert("ok")
-      }
-    };
-    vm.change_type=function(basic){
-      if(vm.type_show==2){
-        vm.type_error=true;
-      }else{
-        vm.type_error=false;
-      }
-      vm.user={};
-      basic.$setPristine();
-    }
-  })
+  angular.module('myApp',[]).controller('myCon', function ($scope) {
+  var vm = $scope.vm = {};
+  vm.items = [];
+  vm.checkAll = function(checked) {
+    angular.forEach(vm.items, function(item) {
+      item.$checked = checked;
+    });
+  };
+  vm.selection = function() {
+
+    /*return _.where(vm.items, {$checked: true});*/
+  };
+  // 供页面中使用的函数
+  vm.age = function(birthday) {
+    return moment().diff(birthday, 'years');
+  };
+  // 生成演示数据
+  var MAX_NUM = 10;
+  function rand(min, max) {
+    return min + Math.round(Math.random() * (max-min));
+  }
+  for (var i = 0; i < MAX_NUM; ++i) {
+    var id = rand(0, MAX_NUM);
+    vm.items.push({
+      id: i + 1,
+      name: 'Name' + id, // 字符串类型
+      followers: rand(0, 100 * 1000 * 1000), // 数字类型
+      birthday: moment().subtract('day', rand(365, 365 * 50)).toDate(), // 日期类型
+      income: rand(1000, 100000) // 金额类型
+    });
+  }
+});
 </script>
 
 

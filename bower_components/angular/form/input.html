@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <script type="text/javascript" src="../js/jquery.js"></script>
+  <link rel="stylesheet" href="../css/bootstrop.css">
+  <script type="text/javascript" src="../js/angular.js"></script>
+  <style type="text/css">
+      input.ng-invalid.ng-dirty{
+        border: 1px solid red;
+        box-shadow:0 0 6px -1px red;
+      }
+      input.ng-valid.ng-dirty{
+        border: 1px solid green;
+        box-shadow: 0 0 6px -1px green;
+      }
+  </style>
+</head>
+<body ng-controller="myCon">
+  <form class="form-horizontal" novalidate="" style="width: 500px; margin:100px auto;" name="basic" id="basics">
+    <div class="form-group"> 
+       <label class="control-label col-sm-2">用户名</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" name="user_name" ng-model="vm.user.name" required="" ng-pattern="/^[A-Za-z]{1}[0-9A-Za-z_]{2,19}$/">
+        </div>
+    </div>
+    <div class="form-group">
+       <label class="control-label col-sm-2">邮件</label>
+        <div class="col-sm-10">
+          <input type="email" class="form-control" name="user_email" ng-model="vm.user.email" required="">
+        </div>
+    </div>
+    <div class="form-group" ng-show="basic.$invalid && basic.$dirty">
+     <label class="control-label col-sm-2"></label>
+      <div class="alert alert-danger">
+          <ul>
+              <li ng-show="basic.user_name.$invalid && basic.user_name.$dirty && basic.user_name.$error.required">用户名不能为空</li>
+              <li ng-show="basic.user_name.$invalid && basic.user_name.$dirty && basic.user_name.$error.pattern">用户名不正确</li>
+              <li ng-show="basic.user_email.$invalid && basic.user_email.$dirty && basic.user_email.$error.required">邮件不能为空</li>
+              <li ng-show="basic.user_email.$invalid && basic.user_email.$dirty && basic.user_email.$error.email">邮件不正确</li>
+          </ul>
+      </div>
+    </div>
+    <div class="form-group">
+       <label class="control-label col-sm-2">性别</label>
+        <div class="col-sm-10">
+          <input type="radio" name="user_xb" ng-model="vm.user.xb" value="man" required=""> 男
+          <input type="radio" name="user_xb" ng-model="vm.user.xb" value="woman" required=""> 女
+        </div>
+    </div>
+    <div class="form-group">
+       <label class="control-label col-sm-2"></label>
+        <div class="col-sm-10">
+          <input type="button" class="btn btn-success"  ng-click="reset()" value="重置" required="">
+          <input type="button" class="btn btn-success" ng-click="copys(vm.user)"  value="复制" required="">
+          <input type="button" class="btn btn-success" ng-disabled="basic.$invalid" ng-click="success(basic)"  value="提交" required="">
+        </div>
+    </div> 
+    <pre>user{{vm.user}}</pre>
+    <pre>master{{vm.master}}</pre>
+  </form>
+</body>
+</html>
+<script type="text/javascript">
+  angular.module("myApp",[]).controller("myCon",function($scope){
+    var vm =$scope.vm={
+      user:{},
+      master:{}
+    }
+    //copy
+    $scope.copys=function(user){
+      $scope.vm.master=angular.copy(user)
+    }
+    //reset
+    $scope.reset=function(){
+      $scope.vm.user = angular.copy($scope.vm.master);
+    }
+    //success
+    $scope.success=function(basic){
+      if(basic.$valid){
+        alert("ok")
+      }
+    }
+    $scope.reset()
+  })
+</script>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <link rel="stylesheet" href="css/bootstrop.css">
+  <script src="js/angular.js"></script>
+</head>
+<body ng-controller="myCon">
+ <div style="width:500px; margin:50px auto;">
+    <form class="form-horizontal showcase-form" name="basic" id="basic" novalidate="">
+    <div class="form-group">
+      <label class="col-sm-2">邮箱</label>
+      <div class="col-sm-10">
+        <input type="email" class="form-control" placeholder="邮箱" name="user_email" ng-model="vm.user.email" required="">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-2">用户名</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" placeholder="用户名" name="user_name" ng-model="vm.user.name" required="" ng-pattern="/^[A-Za-z]{1}[0-9A-Za-z_]{2,29}$/">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-2">密码</label>
+      <div class="col-sm-10">
+        <input type="password" class="form-control" placeholder="密码" name="user_password" ng-model="vm.user.password" required="" ng-maxlength="20" ng-minlength="6">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-2"></label><!-- 不理解这个时候为什么还要把这个条件加上basic.$dirty :有改动的时候才显示 或者类型为3（vm.show_type==3好像没有必要写）的时候这两个条件必须加上 ，不加的话当类型选择2就直接显示了   -->
+      <div class="alert alert-danger" ng-show="basic.$invalid && (basic.$dirty || vm.show_type==3) && vm.show_error ">
+          <ul>
+            <li ng-show="(basic.user_email.$dirty || vm.show_type==3) && basic.user_email.$error.required">邮箱不能为空</li>
+            <li ng-show="(basic.user_email.$dirty || vm.show_type==3) && basic.user_email.$error.email">邮箱格式不正确</li>
+            <li ng-show="(basic.user_name.$dirty || vm.show_type==3) && basic.user_name.$error.required">用户名不能为空</li>
+            <li ng-show="(basic.user_name.$dirty || vm.show_type==3) && basic.user_name.$error.pattern">用户名格式不正确</li>
+            <li ng-show="(basic.user_password.$dirty || vm.show_type==3) && basic.user_password.$error.required">密码不能为空</li>
+            <li ng-show="(basic.user_password.$dirty || vm.show_type==3) && basic.user_password.$error.maxlength">密码不能大于20</li>
+            <li ng-show="(basic.user_password.$dirty || vm.show_type==3) && basic.user_password.$error.minlength">密码不能小于6</li>
+          </ul>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-2"></label>
+      <div class="col-sm-10">
+        <input type="submit" class="btn btn-success" value="提交" ng-click="vm.submit(basic)" ng-disabled="vm.show_type!=3 && basic.$invalid">
+        <!-- 
+          {{vm.show_type!=3 }} 类型为3时false,为其他的时候为true
+          {{basic.$invalid}}  通过验证的时候才为false 否则为true
+          {{vm.show_type!=3 && basic.$invalid }} 可见的3种情况：
+          1、类型为2的并且没有通过验证（true）的时候  结果true true ==>true不可见
+          2、类型为2的并且通过验证（false）的时候  结果true false ==>false可见
+          3、类型为3的并且没有通过验证（true）的时候  结果false true ==>false可见
+          4、类型为3的并且通过验证（true）的时候  结果false false ==>false可见
+       -->
+      </div>
+    </div>
+    <hr>
+    <label for="">
+      <select class="form-control" ng-model="vm.show_type" ng-change="vm.change_show_type(basic)">
+        <option value="1">只有输入框样式变化</option>
+        <option value="2">显示错误提示</option>
+        <option value="3">点击提交才显示错误提示</option>
+      </select>
+    </label>
+  </form>
+ </div>
+</body>
+</html>
+<script type="text/javascript">
+  angular.module("myApp",[]).controller("myCon",function ($scope) {
+    // body...
+    var vm=$scope.vm={
+      show_error:false,
+      show_type:1,
+      user:{}
+    };
+
+    vm.submit=function(basic){
+      vm.show_error=true;
+      basic.$setDirty()
+      if(basic.$valid){
+        alert("ok");
+      }
+    };
+    vm.change_show_type = function (form) {
+        if (vm.show_type == 2) {
+            vm.show_error = true;
+        } else {
+            vm.show_error = false;
+        }
+
+        // 重置表单(这里指的重置是哪一块？)
+        vm.user = {};
+        form.$setPristine();
+
+    }
+  })
+</script>
+
+<!-- 
+  为什么两个函数都需要传值 
+-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
