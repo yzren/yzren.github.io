@@ -59,10 +59,7 @@
     </div>
     <hr>
     <label for="">
-      <select class="form-control" ng-model="vm.show_type" ng-change="vm.change_show_type(basic)">
-        <option value="1">只有输入框样式变化</option>
-        <option value="2">显示错误提示</option>
-        <option value="3">点击提交才显示错误提示</option>
+      <select class="form-control" ng-model="items" ng-change="vm.change_show_type(basic)" ng-options="items.con for items in vm.conOption">
       </select>
     </label>
   </form>
@@ -77,7 +74,12 @@
       show_type:1,
       user:{}
     };
-
+    vm.conOption=[
+      {con:"只有输入框样式变化",value:"1"},
+      {con:"显示错误提示",value:"2"},
+      {con:"点击提交才显示错误提示",value:"3"}
+    ];
+   $scope.items=vm.conOption[0];
     vm.submit=function(basic){
       vm.show_error=true;
       basic.$setDirty()
@@ -86,6 +88,7 @@
       }
     };
     vm.change_show_type = function (form) {
+        vm.show_type=$scope.items.value;
         if (vm.show_type == 2) {
             vm.show_error = true;
         } else {

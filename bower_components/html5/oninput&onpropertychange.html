@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<script type="text/javascript" src="jquery.js"></script>
+<body>
+	<textarea name="" id="" cols="30" rows="10" oninput="onInput(event)"></textarea>
+	<input type="text">
+</body>
+</html>
+<script>
+	function onInput(event){
+		$("input").val(event.target.value)
+	}
+</script>

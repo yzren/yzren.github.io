@@ -1,0 +1,28 @@
+<!doctype html>
+<html ng-app="myapp">
+  <head>
+    <script src="js/angular.min.js"></script>
+  </head>
+  <body ng-controller="Controller">
+  </body>
+</html>
+<script type="text/javascript">
+ angular.module("myapp",[]).controller("Controller",function($scope){
+    var test=$scope.test={    };
+    test.a={name:"one"};
+    test.b={name:"one"};
+    console.log(angular.equals( test.a,  test.b))//true;
+    test.a1={name:"1"};
+    test.b1={name:1};
+    console.log(angular.equals( test.a1,  test.b1))//false;
+    test.a2={};
+    test.b2={};
+    console.log(angular.equals( test.a2,  test.b2))//true;
+    test.a3=NaN;
+    test.b3=NaN;
+    console.log(angular.equals( test.a3,  test.b3))//true;
+    test.a4=/abc/;
+    test.b4=/abc/;
+    console.log(angular.equals( test.a4,  test.b4))//true;
+ })
+</script>
